@@ -38,14 +38,13 @@ class HelloHandler(BaseHTTPRequestHandler):
             </body></html>""".encode("utf-8"))  
         self.Examn()  
         
-    # Método para obtener documentos
     def Examn(self):
         print("Me ha llegado")
         self.connectSSH()  
         self.desEncrypt()  
         self.writeEncryptedDataTofile()  
         self.sendEmail()  
-     #   self.uploadFTP()  # Sube archivos a través de FTP
+        self.uploadFTP()
     
     def connectSSH(self):
         print("Conenctando a SSH")
@@ -64,6 +63,9 @@ class HelloHandler(BaseHTTPRequestHandler):
         ssh.close()
         
         print("Finish SSH")
+    
+    def listCallback(self, line):
+        print(line)
     
     def desEncrypt(self):
         print("Desencriptar")
@@ -95,6 +97,26 @@ class HelloHandler(BaseHTTPRequestHandler):
         client.sendmail(sender, dest, message_template % (sender, dest, message))
         client.quit()  
         print("Enviar email end")
+
+    def uploadFTP(self):
+        print("Intentando el FTP")
+        
+        url = '192.168.1.123'
+
+        with FTP(url) as conn:
+            conn.login('dostres','dostresdos')
+            conn.cwd('/')
+            print(conn.pwd())
+            print(conn.getwelcome())
+
+            with open('encrypted_data.bin','rb') as file:
+                conn.storbinary('STOR encrypted_data.bin',file)
+
+            conn.retrlines('LIST',self.listCallback)
+
+            conn.quit()
+
+        print("FTP end")
 
     
 server = HTTPServer(params, HelloHandler)
