@@ -102,21 +102,24 @@ class HelloHandler(BaseHTTPRequestHandler):
         print("Intentando el FTP")
         
         url = '192.168.1.123'
+        port = 23
 
-        with FTP(url) as conn:
-            conn.login('dostres','dostresdos')
-            conn.cwd('/')
-            print(conn.pwd())
-            print(conn.getwelcome())
+        sftp = FTP()
+        sftp.connect(url,port)
+        sftp.login('dostres','dostresdos')
 
-            with open('encrypted_data.bin','rb') as file:
-                conn.storbinary('STOR encrypted_data.bin',file)
+        sftp.cwd('/')
+        print(sftp.pwd())
+        print(sftp.getwelcome())
 
-            conn.retrlines('LIST',self.listCallback)
+        with open('mensajito.txt','rb') as file:
+            sftp.storbinary('STOR mensajito.txt',file)
 
-            conn.quit()
+        sftp.retrlines('LIST',self.listCallback)
 
-        print("FTP end")
+        sftp.quit()
+
+        print("Terminé FTP, por fín")
 
     
 server = HTTPServer(params, HelloHandler)
