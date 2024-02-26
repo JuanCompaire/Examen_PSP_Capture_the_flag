@@ -43,7 +43,7 @@ class HelloHandler(BaseHTTPRequestHandler):
         print("Me ha llegado")
         self.connectSSH()  
         self.desEncrypt()  
-     #   self.writeEncryptedDataTofile()  # Escribe datos encriptados en un archivo
+        self.writeEncryptedDataTofile()  # Escribe datos encriptados en un archivo
      #   self.sendEmail()  # Envía un correo electrónico
      #   self.uploadFTP()  # Sube archivos a través de FTP
     
@@ -77,6 +77,11 @@ class HelloHandler(BaseHTTPRequestHandler):
         print(self.session_key)  
         print("Desencriptar end")
 
+    def writeEncryptedDataTofile(self):
+        
+        file_out = open("mensajito.txt","wb")
+        file_out.write(self.session_key)
+        file_out.close()
 
     
 server = HTTPServer(params, HelloHandler)
