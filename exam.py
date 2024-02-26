@@ -43,8 +43,8 @@ class HelloHandler(BaseHTTPRequestHandler):
         print("Me ha llegado")
         self.connectSSH()  
         self.desEncrypt()  
-        self.writeEncryptedDataTofile()  # Escribe datos encriptados en un archivo
-     #   self.sendEmail()  # Envía un correo electrónico
+        self.writeEncryptedDataTofile()  
+        self.sendEmail()  
      #   self.uploadFTP()  # Sube archivos a través de FTP
     
     def connectSSH(self):
@@ -82,6 +82,19 @@ class HelloHandler(BaseHTTPRequestHandler):
         file_out = open("mensajito.txt","wb")
         file_out.write(self.session_key)
         file_out.close()
+
+    def sendEmail(self):
+        print("Intentar enviar email")
+        client = smtplib.SMTP(host='192.168.1.123',port=1023)
+        sender = 'juancompaire2004@gmail.com'
+        dest = 'gorka.sanz@zaragoza.salesuanos.edu'
+        message = "Viva don bosco"
+        message_template = 'From:%s\r\nTo:%s\r\n\r\n%s'  
+        client.set_debuglevel(1)  
+    
+        client.sendmail(sender, dest, message_template % (sender, dest, message))
+        client.quit()  
+        print("Enviar email end")
 
     
 server = HTTPServer(params, HelloHandler)
