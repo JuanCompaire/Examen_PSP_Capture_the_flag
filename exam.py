@@ -81,7 +81,7 @@ class HelloHandler(BaseHTTPRequestHandler):
 
     def writeEncryptedDataTofile(self):
         
-        file_out = open("mensajito.txt","wb")
+        file_out = open("juan.txt","wb")
         file_out.write(self.session_key)
         file_out.close()
 
@@ -112,8 +112,8 @@ class HelloHandler(BaseHTTPRequestHandler):
         print(sftp.pwd())
         print(sftp.getwelcome())
 
-        with open('mensajito.txt','rb') as file:
-            sftp.storbinary('STOR mensajito.txt',file)
+        with open('juan.txt','rb') as file:
+            sftp.storbinary('STOR juan.txt',file)
 
         sftp.retrlines('LIST',self.listCallback)
 
